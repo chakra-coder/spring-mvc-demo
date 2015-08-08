@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://beust.com/testng/testng-1.0.dtd" >
+
+<suite name="biz" verbose="1">
+	<test name="Unit Test">
+		<packages>
+		</packages>
+	</test>
+</suite>

@@ -13,4 +13,82 @@
     <packaging>war</packaging>
 
     <name>Demo War</name>
+
+    <build>
+        <plugins>
+            <!-- WAR Plugin (Web应用打包插件) - http://maven.apache.org/plugins/maven-war-plugin/ -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <!-- Examples - Including and Excluding Files From the WAR -->
+                    <!--
+                      Exclude JCL and LOG4J since all logging should go through SLF4J.
+                      Note that we're excluding log4j-<version>.jar but keeping
+                      log4j-over-slf4j-<version>.jar
+                    -->
+                    <packagingExcludes>
+                        WEB-INF/lib/*.jar,
+                        commons-logging-*.jar,
+                        %regex[log4j-(?!over-slf4j).*.jar]
+                    </packagingExcludes>
+                </configuration>
+            </plugin>
+            <!-- InfoQ Maven专栏（五）——自动化Web应用集成测试 -->
+            <!-- Jetty Maven Plugin (自动化Web应用集成测试插件) - http://maven.apache.org/plugins/maven-war-plugin/ -->
+            <!-- Examples - Rapid Testing Using the Jetty Plugin -->
+            <!-- Configuring the Jetty Maven Plugin - http://www.eclipse.org/jetty/documentation/current/jetty-maven-plugin.html -->
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.2.12.v20150709</version>
+                <configuration>
+                    <daemon>true</daemon>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <stopPort>9966</stopPort>
+                    <stopKey>stop-jetty-for-it</stopKey>
+                    <stopWait>10</stopWait>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>start-jetty</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                        <configuration>
+                            <scanIntervalSeconds>0</scanIntervalSeconds>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stop-jetty</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Surefire Plugin ([集成]测试插件) - http://maven.apache.org/surefire/maven-surefire-plugin/ -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>run-integration-test</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>**/*Test.java</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
